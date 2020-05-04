@@ -16,7 +16,7 @@ ScriptName = "Game - Slots"
 Website = "http://www.brains-world.eu"
 Description = "Slotmachine game for Twitch chat"
 Creator = "Brain"
-Version = "1.2.1"
+Version = "1.2.2"
 
 #---------------------------------------
 #	Set Variables
@@ -174,6 +174,11 @@ def ReloadSettings(jsonData):
 
 	if settings["checkTwitchEmotes"]:
 		# Grab the list of available Twitch emotes
+		
+		jsonData = json.loads(Parent.GetRequest("https://api.twitchemotes.com/api/v4/channels/0", {}))
+		if jsonData["status"] == 200:
+			twitchEmotes.update(set(x["code"] for x in json.loads(jsonData["response"])["emotes"]))
+		
 		jsonData = json.loads(Parent.GetRequest("https://twitchemotes.com/api_cache/v3/global.json", {}))
 		if jsonData["status"] == 200:
 			twitchEmotes.update(set(json.loads(jsonData["response"]).keys()))
